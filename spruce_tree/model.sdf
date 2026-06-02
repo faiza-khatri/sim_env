@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+    <model name="spruce_tree">
+        <static>true</static>
+        <link name="link">
+            <visual name="visual">
+                <geometry>
+                    <mesh><uri>model://spruce_tree/spruce_tree.glb</uri></mesh>
+                </geometry>
+            </visual>
+        </link>
+    </model>
+</sdf>
