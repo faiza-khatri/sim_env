@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+    <model name="pine_tree_gz">
+        <static>true</static>
+        <link name="link">
+            <visual name="visual">
+                <geometry>
+                    <mesh><uri>model://pine_tree_gz/model.glb</uri></mesh>
+                </geometry>
+            </visual>
+        </link>
+    </model>
+</sdf>
