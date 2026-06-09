@@ -90,6 +90,14 @@ for i in range(NUM_TREES_FIR):
   flag = True
   while flag:
     flag = False
+    for tree in TREES_SPRUCE:
+      while x > tree[1] - THRESHOLD and x < tree[1] + THRESHOLD:
+          X = random.uniform(X_MIN, X_MAX)
+          flag = True
+      while y > tree[2] - THRESHOLD and y < tree[2] + THRESHOLD:
+          Y = random.uniform(Y_MIN, Y_MAX)
+          flag = True
+
     for tree in TREES_FIR:
       while x > tree[1] - THRESHOLD and x < tree[1] + THRESHOLD:
           X = random.uniform(X_MIN, X_MAX)
@@ -100,6 +108,41 @@ for i in range(NUM_TREES_FIR):
   scale = random.uniform(0.15, 0.2)
   entry = ("fir_tree_"+str(i), x, y, 0, scale)
   TREES_FIR.append(entry)
+
+NUM_ROCKS = 30
+ROCKS = []
+for i in range(NUM_ROCKS):
+  x = random.uniform(X_MIN, X_MAX)
+  y = random.uniform(Y_MIN, Y_MAX)
+  flag = True
+  while flag:
+    flag = False
+    for tree in TREES_SPRUCE:
+      while x > tree[1] - THRESHOLD and x < tree[1] + THRESHOLD:
+          X = random.uniform(X_MIN, X_MAX)
+          flag = True
+      while y > tree[2] - THRESHOLD and y < tree[2] + THRESHOLD:
+          Y = random.uniform(Y_MIN, Y_MAX)
+          flag = True
+
+    for tree in TREES_FIR:
+      while x > tree[1] - THRESHOLD and x < tree[1] + THRESHOLD:
+          X = random.uniform(X_MIN, X_MAX)
+          flag = True
+      while y > tree[2] - THRESHOLD and y < tree[2] + THRESHOLD:
+          Y = random.uniform(Y_MIN, Y_MAX)
+          flag = True
+
+    for tree in ROCKS:
+      while x > tree[1] - THRESHOLD and x < tree[1] + THRESHOLD:
+          X = random.uniform(X_MIN, X_MAX)
+          flag = True
+      while y > tree[2] - THRESHOLD and y < tree[2] + THRESHOLD:
+          Y = random.uniform(Y_MIN, Y_MAX)
+          flag = True
+  scale = random.uniform(0.15, 0.2)
+  entry = ("rock_"+str(i), x, y, 0, scale)
+  ROCKS.append(entry)
 
 
 TABLES = [
@@ -179,6 +222,37 @@ def tree_sdf_fir(name, x, y, z_offset, scale):
         </collision>
       </link>
     </model>"""
+
+def rock_sdf(name, x, y, z_offset, scale):
+    
+    tz = terrain_z(x, y)
+    z  = tz + z_offset
+    s  = scale
+    return f"""
+    <!-- {name}: terrain_z({x}, {y}) = {tz:.4f} -->
+    <model name="{name}">
+      <static>true</static>
+      <pose>{x} {y} {z:.4f} 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock/rock.glb</uri>
+              <scale>{s} {s} {s}</scale>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.15</radius>
+              <length>2.0</length>
+            </cylinder>
+          </geometry>
+          <pose>0 0 1.0 0 0 0</pose>
+        </collision>
+      </link>
+    </model>"""
     
 def table_sdf(name, x, y, z_offset):
     tz = terrain_z(x, y)
@@ -208,6 +282,7 @@ def apriltag_sdf(name, x, y, z_offset, roll, pitch, yaw):
 # ─────────────────────────────────────────────
 tree_xml_spruce     = "".join(tree_sdf_spruce(*t)     for t in TREES_SPRUCE)
 tree_xml_fir     = "".join(tree_sdf_fir(*t)     for t in TREES_FIR)
+rock_xml = "".join(rock_sdf(*r) for r in ROCKS)
 table_xml    = "".join(table_sdf(*t)    for t in TABLES)
 apriltag_xml = "".join(apriltag_sdf(*t) for t in APRILTAGS)
 
@@ -267,6 +342,7 @@ world = f"""<?xml version="1.0" ?>
     </model>
 {tree_xml_spruce}
 {tree_xml_fir}
+{rock_xml}
 
     <!-- ── Tables ───────────────────────────── -->
 {table_xml}
